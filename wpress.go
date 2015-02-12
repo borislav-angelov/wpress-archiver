@@ -59,7 +59,7 @@ func main() {
 			compress(dest)
 
 			// Remove destination folder
-			// os.RemoveAll(dest)
+			os.RemoveAll(dest)
 
 			// Print OK
 			fmt.Println("OK")
@@ -71,12 +71,18 @@ func main() {
 func compress(src string) {
 	archiver, _ := wpress.NewWriter(fmt.Sprintf("%s.wpress", src))
 
+	// Get current working folder
+	cwd, _ := os.Getwd()
+
 	// Go to destination folder
 	os.Chdir(src)
 
 	// Add directory recursively
 	archiver.AddDirectory(".")
 	archiver.Close()
+
+	// Go to previous folder
+	os.Chdir(cwd)
 }
 
 func unzip(zipfile string, dest string) {
