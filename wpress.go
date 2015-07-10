@@ -118,7 +118,7 @@ func unzip(zipfile string, dest string) {
 
 		defer zipped.Close()
 
-		// Get the individual file name and extract the current directory
+		// Get current path
 		path := filepath.Join(dest, f.Name)
 
 		// Ignore files and folders
@@ -127,10 +127,16 @@ func unzip(zipfile string, dest string) {
 		}
 
 		if f.FileInfo().IsDir() {
+			// Create current directory
 			os.MkdirAll(path, f.Mode())
-			fmt.Println("Creating directory", path)
 		} else {
-			writer, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, f.Mode())
+			// Get sub directory
+			dir := filepath.Join(dest, filepath.Dir(f.Name))
+
+			// Create sub directory
+			os.MkdirAll(dir, f.Mode())
+
+			writer, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 
 			if err != nil {
 				fmt.Println(err)
